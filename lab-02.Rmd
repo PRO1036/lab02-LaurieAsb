@@ -1,7 +1,7 @@
 ---
 title: "Lab 02 - Plastic waste"
-author: "Votre nom"
-date: "La date"
+author: "Laurie Sato Breton"
+date: "19 septembre 2025"
 output: github_document
 ---
 
@@ -27,17 +27,26 @@ plastic_waste <- plastic_waste %>%
 
 ### Exercise 1
 
+En terme de déchets plastiques, l'Océanie, l'Amérique du Nord, l'Asie et l' Europe en produisent le plus. Pour l'aAfrique et l'Amérique du Sud, ils ont une production faible par habitant à une production intermédiaire.
+
 ```{r plastic-waste-continent}
-# insert code here
+ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) + geom_histogram(binwidth = 0.2) + facet_wrap(~ continent)
 ```
 
 ### Exercise 2
 
-```{r plastic-waste-density}
-# insert code here
-```
 
-Réponse à la question...
+```{r plastic-waste-density}
+ ggplot(plastic_waste, aes(x = plastic_waste_per_cap, fill = continent, color = continent)) +
+  geom_density(adjust = 0.8, alpha = 0.2) + 
+  labs(x = "plastic_waste_per_cap", 
+       y = "Density",
+       title = "Densité de déchets produits par continent", 
+       fill = "Contient") + 
+  guides(fill = "none")
+```
+Le réglage de la couleur: color et fill, se retrouvent dans aes(), car nous voulons assosier une variable du jeu de données à un aspect visuel du graphe. Donc, color et fill dans aes() sert à donner une couleur différente à chaque continent.
+Le réglage de l'opacité: alpha, se retrouve dans geom_density(), car l'opacité n'est pas associé à une variable de données, mais c'est pour la qualité du graphe.
 
 ### Exercise 3
 
