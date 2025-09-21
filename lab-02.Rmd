@@ -27,7 +27,7 @@ plastic_waste <- plastic_waste %>%
 
 ### Exercise 1
 
-En terme de déchets plastiques, l'Océanie, l'Amérique du Nord, l'Asie et l' Europe en produisent le plus. Pour l'aAfrique et l'Amérique du Sud, ils ont une production faible par habitant à une production intermédiaire.
+En terme de déchets plastiques, l'Océanie, l'Amérique du Nord, l'Asie et l' Europe en produisent le plus. Pour l'Afrique et l'Amérique du Sud, ils ont une production faible par habitant à une production intermédiaire.
 
 ```{r plastic-waste-continent}
 ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) + geom_histogram(binwidth = 0.2) + facet_wrap(~ continent)
@@ -78,7 +78,7 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = misman
            colour = "continent")
 ```
 
-Nous pouvons observer que la relation entre les déchets non gérés est à peu près proportionelle, à la quantité de déchets pour l'Afrique. Pour l'Europe, on peut voir une meilleure gestion des déchets. Nous pouvons l'observer par le plateau de points vert. Pour ce qui est de l'Asie, 
+Nous pouvons observer que la relation entre les déchets non gérés est à peu près proportionelle à la quantité de déchets, pour l'Afrique. Pour l'Europe, on peut voir une meilleure gestion des déchets. Nous pouvons l'observer par le plateau de points vert. 
 
 ### Exercise 5
 
@@ -88,18 +88,30 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = total_
 ```
 
 ```{r plastic-waste-population-coastal}
-ggplot(data = plastic_waste, mapping = aes(x = coastal_pop, y = plastic_waste_per_cap , colour = continent)) + geom_point() + labs(title = "Relation entre la quantité de déchet plastique et le nombre d'habitant vivant près d'une côte", subtitle = "Selon le continent", x = "coastal_pop", y = "plastic_waste_per_cap", colour = "continent")
+ggplot(data = plastic_waste, mapping = aes(x = coastal_pop, y = plastic_waste_per_cap , colour = continent)) + geom_point() + labs(title = "Relation entre la quantité de déchet plastique et le nombre d'habitant vivant sur des côtes", subtitle = "Selon le continent", x = "coastal_pop", y = "plastic_waste_per_cap", colour = "continent")
 
 ```
 
-La population n'habitant pas proche d'une côte ont tendance à produire plus de déchets. 
+La population n'habitant pas proche d'une côte a tendance à produire plus de déchets. 
 
 ## Conclusion
 
 Recréez la visualisation:
 
 ```{r recreate-viz}
-ggplot(data = plastic_waste, mapping = aes(x = coastal_pop_prop, y = plastic_waste_per_cap , colour = continent)) + 
-  geom_point() + labs(title = "Quantité de déchets plastiques vs Proportion de la population côtière", subtitle = "Selon le continent", x = "Proportion de la population côtière (Coastal / total population)", y = "Nombre de déchets plastiques pas habitant", colour = "continent") + geom_smooth(method = "loess")
+plastic_waste_coastal <- plastic_waste %>% 
+  mutate(coastal_pop_prop = coastal_pop / total_pop) %>%
+  filter(plastic_waste_per_cap < 3)
+ggplot(plastic_waste_coastal, 
+       aes(x = coastal_pop_prop, y = plastic_waste_per_cap, color = continent)) +
+  geom_point(alpha = 0.8, size = 1.5) +
+  geom_smooth(method = "loess", se = TRUE, color = "black") +
+  labs(
+    title = "Quantité de déchets plastiques par habitant vs Proportion de la population côtière", subtitle = "Selon le continent", 
+    x = "Proportion de population côtière (Coastal / total population)",
+    y = "Nombre de déchets plastiques par habitant (kg/jour)",
+    color = "Continent"
+  ) +
+  theme_minimal()
 
 ```
